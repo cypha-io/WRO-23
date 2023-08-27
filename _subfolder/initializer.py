@@ -32,7 +32,7 @@ station_blue_green = [Color.BLUE, Color.GREEN, 'Color.GREEN', 'Color.BLUE']
 container_color = [] #List of lists to store the color codes for each container
 
 
-# PROGRAMS STAY HERE LOL:)
+                        #PROGRAMS STAY HERE LOL:)
 
 
 # DEFINE ACTIONS HERE :)
@@ -73,16 +73,28 @@ def gyro_straight_start_to_station(distance=200, drive_speed=150):
 ev3.speaker.beep()
 
 # Turn 90 Degrees
-def turn_90(speed=robot_speed):
+def turn_90_left(speed=robot_speed):
     gyro.reset_angle(0)
     while gyro.angle() < 90:
         left_motor.run(robot_speed)
     robot.stop()
     ev3.speaker.beep()
+    
+def turn_90_right(speed=robot_speed):
+    gyro.reset_angle(0)
+    while gyro.angle() < 90:
+        right_motor.run(robot_speed)
+    robot.stop()
+    ev3.speaker.beep()
+    
+def turn_90_right_rev(speed=-100):
+    gyro.reset_angle(0)
+    while gyro.angle() < 90:
+        right_motor.run(-100)
+    robot.stop()
+    ev3.speaker.beep()
 
 # Turn 180 Degrees
-
-
 def turn_180(speed=robot_speed):
     gyro.reset_angle(0)
     while gyro.angle() < 180:
@@ -124,7 +136,7 @@ def station_store_color():
     
 #Store Container Colours  
 #Ignore the errors -- it still works  
-def containers_store_colours():
+def containers_store_colors():
     #store color 1
     color_1 = color_sensor.color()
     while color_1 is None:
@@ -139,7 +151,7 @@ def containers_store_colours():
     while color_2 is None:
         color_2 = color_sensor.color()
     container_color.append(color_2)
-    
+
     robot.straight(25)
 
     #store color 3
@@ -156,29 +168,51 @@ def containers_store_colours():
         color_4 = color_sensor.color()
     container_color.append(color_4)
     print(container_color)
+    
+def pick_blues():
+    #code here
+    if (container_color == ['put the colors for blue here']):
+        #continue code here
+    else:
+        ev3.speaker.beep()
+def pick_green():
+    #code here
+    
+def pick_both_colors():
+    #code here
+    
  
 #This code makes the robot sense all four colors and store them    
-def run_section_1():
+def sort_station_colors():
     #GREEN & BLUE || BLUE & GREEN
     if (Color.GREEN in station_color and Color.BLUE in station_color):
         print("Success: Two different colors")
-        
-        
-        
+        pick_both_colors() 
     #BOTH GREEN
     elif (Color.GREEN in station_color and Color.GREEN in station_color):
         print("Success: Both are GREEN")
-        
-        
-        
+        pick_greens()
     #BOTH ARE BLUE
     elif (Color.BLUE in station_color and Color.BLUE in station_color):
         print("Success: Both are BLUE")
-        
-        
-        
+        pick_blues()    
     else:
         print('Error: Nothing is possible Man :)')
+    
+#Defining first task which is sensing, storing and fueling ship
+def task_1():
+    robot.settings(200, 200, 0, 0)
+    robot.straight(200)
+    station_store_color()
+    
+    left_motor.run_target(100, 90)
+    wait(100)
+    right_motor.run_target(100, 90)
+    
+    robot.settings(100, 100, 0, 0)
+    robot.straight(100) 
+    robot.straight(-150)
+
     
 
 
