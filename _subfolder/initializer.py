@@ -38,7 +38,7 @@ container_color = [] #List of lists to store the color codes for each container
 # DEFINE ACTIONS HERE :)
 
 # PID Until Both See Black
-def pid_line(proportional_gain=1.05, drive_speed=robot_speed):
+def pid_line(proportional_gain=1.05, drive_speed=200):
     while left_sensor.reflection() + right_sensor.reflection() > 50:
         # Calculate the deviation from the threshold.
         deviation = left_sensor.reflection() - right_sensor.reflection()
@@ -64,7 +64,7 @@ def pid_distance(proportional_gain=1.4, drive_speed=robot_speed, distance=10):
     robot.stop()
 
 # Move robot straight with gyro sensor!
-def gyro_straight_start_to_station(distance=200, drive_speed=150):
+def accurate_straight(distance=200, drive_speed=150):
     gyro.reset_angle(0)
     while robot.distance() <= 100:
         correction = (0 - gyro.angle())*1
@@ -73,29 +73,36 @@ def gyro_straight_start_to_station(distance=200, drive_speed=150):
 ev3.speaker.beep()
 
 # Turn 90 Degrees
-def turn_90_left(speed=robot_speed):
+def turn_90_left(speed=200):
     gyro.reset_angle(0)
     while gyro.angle() < 90:
-        left_motor.run(robot_speed)
+        left_motor.run(200)
     robot.stop()
     ev3.speaker.beep()
     
-def turn_90_right(speed=robot_speed):
+def turn_90_right(speed=200):
     gyro.reset_angle(0)
     while gyro.angle() < 90:
-        right_motor.run(robot_speed)
+        right_motor.run(200)
     robot.stop()
     ev3.speaker.beep()
     
-def turn_90_right_rev(speed=-100):
+def turn_90_right_rev(speed=-200):
     gyro.reset_angle(0)
     while gyro.angle() < 90:
-        right_motor.run(-100)
+        right_motor.run(-200)
+    robot.stop()
+    ev3.speaker.beep()
+    
+def turn_90_left_rev(speed=-200):
+    gyro.reset_angle(0)
+    while gyro.angle() < 90:
+        left_motor.run(-200)
     robot.stop()
     ev3.speaker.beep()
 
 # Turn 180 Degrees
-def turn_180(speed=robot_speed):
+def turn_180(speed=200):
     gyro.reset_angle(0)
     while gyro.angle() < 180:
         left_motor.run(robot_speed)
@@ -111,108 +118,3 @@ def say_color():
     ev3.speaker.set_volume(100, which='PCM')
     ev3.speaker.say(str(output_color[1]))
     print(output_color)
-
-# Store the color that has been sensed (Station)
-def station_store_color():
-    # Sense the first color
-    #The error doesn't matter
-    color_1 = color_sensor.color()
-    say_color() #Make sure to check if it works---
-    while color_1 is None:  # Corrected
-        color_1 = color_sensor.color()
-    station_color.append(color_1)
-    
-    robot.settings(200, 200, 0, 0)
-    robot.straight(20)
-
-    # Sense the second color
-    color_2 = color_sensor.color()
-    say_color() #Check here too to see if it works---
-    while color_2 is None:  # Corrected
-        color_2 = color_sensor.color()
-    station_color.append(color_2)
-    #print the current stored colors
-    print(station_color)
-    
-#Store Container Colours  
-#Ignore the errors -- it still works  
-def containers_store_colors():
-    #store color 1
-    color_1 = color_sensor.color()
-    while color_1 is None:
-        color_1 = color_sensor.color()
-    container_color.append(color_1)
-    
-    robot.settings(300, 300, 0, 0)
-    robot.straight(25)
-    
-    #store color 2
-    color_2 = color_sensor.color()
-    while color_2 is None:
-        color_2 = color_sensor.color()
-    container_color.append(color_2)
-
-    robot.straight(25)
-
-    #store color 3
-    color_3 = color_sensor.color()
-    while color_3 is None:
-        color_3 = color_sensor.color()
-    container_color.append(color_3)
-    
-    robot.straight(25)
- 
-    #store color 4 and last
-    color_4 = color_sensor.color()
-    while color_4 is None:
-        color_4 = color_sensor.color()
-    container_color.append(color_4)
-    print(container_color)
-    
-def pick_blues():
-    #code here
-    if (container_color == ['put the colors for blue here']):
-        #continue code here
-    else:
-        ev3.speaker.beep()
-def pick_green():
-    #code here
-    
-def pick_both_colors():
-    #code here
-    
- 
-#This code makes the robot sense all four colors and store them    
-def sort_station_colors():
-    #GREEN & BLUE || BLUE & GREEN
-    if (Color.GREEN in station_color and Color.BLUE in station_color):
-        print("Success: Two different colors")
-        pick_both_colors() 
-    #BOTH GREEN
-    elif (Color.GREEN in station_color and Color.GREEN in station_color):
-        print("Success: Both are GREEN")
-        pick_greens()
-    #BOTH ARE BLUE
-    elif (Color.BLUE in station_color and Color.BLUE in station_color):
-        print("Success: Both are BLUE")
-        pick_blues()    
-    else:
-        print('Error: Nothing is possible Man :)')
-    
-#Defining first task which is sensing, storing and fueling ship
-def task_1():
-    robot.settings(200, 200, 0, 0)
-    robot.straight(200)
-    station_store_color()
-    
-    left_motor.run_target(100, 90)
-    wait(100)
-    right_motor.run_target(100, 90)
-    
-    robot.settings(100, 100, 0, 0)
-    robot.straight(100) 
-    robot.straight(-150)
-
-    
-
-
